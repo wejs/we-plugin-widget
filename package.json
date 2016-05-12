@@ -22,10 +22,12 @@
   ],
   "dependencies": {},
   "devDependencies": {
+    "express-mysql-session": "^1.0.0",
     "fs-extra": "^0.18.2",
     "istanbul": "^0.3.14",
     "jshint": "^2.8.0",
     "mocha": "^2.2.5",
+    "mysql": "^2.10.2",
     "rimraf": "^2.3.4",
     "sinon": "^1.17.4",
     "supertest": "^1.0.1",
