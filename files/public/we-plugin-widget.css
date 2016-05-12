@@ -1,0 +1,37 @@
+we-region,
+widget {
+  display: block;
+}
+
+.we-region-actions {
+  display: none;
+  padding: 4px;
+  background-color: gold;
+  border: 2px outset salmon;
+}
+
+.we-region-widget-actions {
+  display: none;
+  padding: 4px;
+  background-color: lightblue;
+}
+
+body.we-editing-layout .we-region-actions,
+body.we-editing-layout .we-region-widget-actions {
+  display: block;
+}
+body.we-editing-layout .widget {
+  border: 2px dashed transparent;
+  display: block;
+}
+
+body.we-editing-layout .widget:hover{
+  border-color: chocolate;
+}
+
+.widget-hidden {
+  display: none;
+}
+body.we-editing-layout .widget-hidden {
+  display: block;
+}
