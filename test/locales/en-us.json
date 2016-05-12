@@ -1,0 +1,13 @@
+{
+	"user": "user",
+	"Widget": "Widget",
+	"Edit": "Edit",
+	"Delete": "Delete",
+	"widget.html.label": "widget.html.label",
+	"widget.passport-strategies.label": "widget.passport-strategies.label",
+	"widget.visibility": "widget.visibility",
+	"widget.in-portal": "widget.in-portal",
+	"widget.in-session": "widget.in-session",
+	"widget.in-session-record": "widget.in-session-record",
+	"widget.in-page": "widget.in-page"
+}
