@@ -32,10 +32,12 @@ module.exports = {
         res.locals.template = record.type + '/wiew';
         // run view middleware for load widget view data
         record.viewMiddleware(req, res, function() {
+
           record.dataValues.html = req.we.plugins['we-plugin-widget'].widgetTypes[record.type].render({
             locals: res.locals,
             widget: record
           }, res.locals.theme);
+
           if (req.accepts('html')) {
             return res.status(201).send(record.dataValues.html);
           } else {

@@ -1,5 +1,3 @@
-
-
 (function (we) {
 
   if (we.config.widgetContext) {
@@ -131,15 +129,17 @@
           formData.context = we.config.widgetContext;
 
           $.ajax({
-            headers: { 'we-widget-action': 'add' },
-            url: location.pathname+'?responseType=json',
+            headers: {
+              'we-widget-action': 'add'
+            },
+            url: location.pathname,
             method: 'POST',
             data: {
               widget: JSON.stringify(formData)
             }
-          }).then(function (r) {
+          }).then(function (html) {
             // insert after regions actions
-            regionWidgetsTag.prepend(r.widget.html);
+            regionWidgetsTag.prepend(html);
           }).always(function() {
             modal.modal('hide');
           });
@@ -178,14 +178,13 @@
 
           $.ajax({
             headers: { 'we-widget-action': 'update' },
-            url: url+'?responseType=json',
+            url: url,
             method: 'POST',
             data: {
               widget: JSON.stringify(formData)
             }
-          }).then(function (r) {
-            we.events.emit('model-update', 'widget', r.widget);
-            widgetTag.after(r.widget.html);
+          }).then(function (html) {
+            widgetTag.after(html);
             widgetTag.remove();
           }).always(function(){
             modalForm.modal('hide');
@@ -230,6 +229,60 @@
       }).then(function (f) {
         modal.find('.modal-body').html(f);
       });
+    }
+  };
+
+  we.admin.layouts = {
+    widgetTableSorter: function widgetTableSorter (selector, regionName) {
+      if (!selector) selector = '.sorted_table > tbody';
+
+      var sortableList = $(selector);
+      // Sortable rows
+      sortableList.sortable({
+        update: function updateSort() {
+          saveOrder(this);
+        }
+      });
+      function saveOrder(tbody) {
+        var widgets = [];
+        var list = $(tbody).children('tr');
+
+        for (var i = 0; i < list.length; i++) {
+          widgets.push({
+            id: $(list[i]).attr('model-id'), weight: i
+          });
+
+          $(list[i]).attr('data-weight', i);
+        }
+
+        $.ajax({
+          headers: { 'we-widget-action': 'updateSort' },
+          url: location.pathname+'?responseType=json',
+          method: 'POST',
+          // dataType: 'json',
+          // contentType: 'application/json; charset=utf-8',
+          data: {
+            params: JSON.stringify({
+              regionName: regionName,
+              layout: $('#we-layout').attr('data-we-layout')
+            }),
+            widgets: JSON.stringify(widgets)
+          }
+        }).done(function (r) {
+          var region = $('#region-'+regionName);
+          var widget;
+          var lastWidget = null;
+          for (var i = 0; i < r.widget.length; i++) {
+            widget = region.find('#widget-'+r.widget[i].id);
+            if (lastWidget) {
+              widget.insertAfter(lastWidget);
+            } else {
+              region.find('widgets').prepend(widget);
+            }
+            lastWidget = widget;
+          }
+        });
+      }
     }
   };
 

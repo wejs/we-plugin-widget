@@ -181,7 +181,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
 
   // bind update widget middleware
   plugin.events.on('router:add:acl:middleware', function (data) {
-    data.we.express.use(require('./lib/updateWidgetMiddleware'));
+    data.middlewares.push(require('./lib/updateWidgetMiddleware'));
   });
 
   plugin.addJs('we-plugin-widget', {

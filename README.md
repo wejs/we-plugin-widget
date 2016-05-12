@@ -8,6 +8,153 @@ Widgets are dynamic blocks how may be added in any url (layout) with regions
 
 ## API
 
+### Add / create one widget
+
+```js
+  $.ajax({
+    headers: { 'we-widget-action': 'add' },
+    url: location.pathname,
+    method: 'POST',
+    data: {
+      widget: JSON.stringify(formData)`// new widget data`
+    }
+  }).then(function (html) {
+    console.log('new widget html:',html);
+  });
+```
+
+### getCreateForm
+
+```js
+  $.ajax({
+    headers: { 'we-widget-action': 'getCreateForm' },
+    url: location.pathname,
+    method: 'POST'
+  }).then(function (r) {
+    console.log('html form:',r);
+  });
+```
+
+### getUpdateForm
+
+```js
+  $.ajax({
+    headers: { 'we-widget-action': 'getUpdateForm' },
+    url: url,
+    method: 'POST',
+    data: {
+      widget: JSON.stringify({ id: id }) // required
+    }
+  }).then(function (f) {
+    console.log('html form:',r);
+  });
+```
+
+### update
+
+```js
+  $.ajax({
+    headers: { 'we-widget-action': 'update' },
+    url: url+'?responseType=json',
+    method: 'POST',
+    data: {
+      widget: JSON.stringify(formData) // data to update with widgetId
+    }
+  }).then(function (r) {
+    console.log('updated widget data:',r);
+  });
+```
+
+### delete
+```js
+    $.ajax({
+      headers: { 'we-widget-action': 'delete' },
+      url: location.pathname+'?responseType=json',
+      method: 'POST',
+      data: {
+        widgetId: id
+      }
+    }).then(function (r) {
+       console.log('deleted widget:', r);
+    });
+```
+
+### findOne
+
+```js
+    $.ajax({
+      headers: { 'we-widget-action': 'findOne' },
+      url: location.pathname+'?responseType=json',
+      method: 'POST',
+      data: {
+         widget: JSON.stringify({ id: 131231})
+      }
+    }).then(function (r) {
+       console.log('Widget:', r.widget);
+    });
+```
+
+### find
+
+```js
+    $.ajax({
+      headers: { 'we-widget-action': 'find' },
+      url: location.pathname+'?responseType=json',
+      method: 'POST'
+    }).then(function (r) {
+       console.log('Widgets:', r);
+    });
+```
+
+### getWidgetsToSort , get widget sort form
+
+```js
+  $.ajax({
+    headers: { 'we-widget-action': 'getWidgetsToSort' },
+    url: url+'?responseType=modal&skipHTML=true',
+    method: 'POST',
+    data: {
+      params: JSON.stringify({
+        regionName: regionName
+      })
+    }
+  }).then(function (f) {
+    console.log('html>', f);
+  });
+```
+
+### updateSort
+
+```js
+    $.ajax({
+      headers: { 'we-widget-action': 'updateSort' },
+      url: location.pathname+'?responseType=json',
+      method: 'POST',
+      data: {
+        params: JSON.stringify({
+          regionName: regionName,
+          layout: $('#we-layout').attr('data-we-layout') // layout name
+        }),
+        widgets: JSON.stringify(widgets)
+      }
+    }).then(function(r){
+        console.log('updated widgets:', r.widget);
+    })
+```
+
+### getWidgetTypes
+
+```js
+  $.ajax({
+    headers: { 'we-widget-action': 'getWidgetTypes' },
+    url: location.pathname,
+    method: 'POST',
+    data: {}
+  }).then(function afterGetWidgetTypes(r) {
+    console.log('widget types:', r);
+  });
+```
+
 
 ## Links
 
