@@ -9,5 +9,8 @@
 	"widget.in-portal": "widget.in-portal",
 	"widget.in-session": "widget.in-session",
 	"widget.in-session-record": "widget.in-session-record",
-	"widget.in-page": "widget.in-page"
+	"widget.in-page": "widget.in-page",
+	"Login": "Login",
+	"Home": "Home",
+	"user.find": "user.find"
 }
