@@ -32,6 +32,10 @@
     "sinon": "^1.17.4",
     "supertest": "^1.0.1",
     "we-core": "wejs/we-core",
+    "we-plugin-acl": "^1.0.0",
+    "we-plugin-auth": "^1.0.0",
+    "we-plugin-user": "^1.0.0",
+    "we-plugin-view": "^1.0.0",
     "we-test-tools": "wejs/we-test-tools",
     "we-theme-site-wejs": "wejs/we-theme-site-wejs"
   },

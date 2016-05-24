@@ -47,6 +47,7 @@ describe('widgetFeature', function() {
       .expect(201)
       .end(function (err, res) {
         if (err) throw err;
+
         assert(res.text);
         assert( res.text.indexOf(w.html) > -1 );
         done();
@@ -89,8 +90,9 @@ describe('widgetFeature', function() {
         .expect(200)
         .end(function (err, res) {
           if (err) return done(err);
+
           assert(res.text.search(w.title) > -1);
-          assert(res.text.search(w.configuration.html) > -1);
+          assert.equal(res.body.widget.configuration.html, w.configuration.html);
           done();
         });
       });
