@@ -6,6 +6,12 @@ Add widget features with API in any we.js project
 
 Widgets are dynamic blocks how may be added in any url (layout) with regions
 
+## Installation
+
+```sh
+ẁe i we-plugin-widget
+```
+
 ## API
 
 ### Add / create one widget

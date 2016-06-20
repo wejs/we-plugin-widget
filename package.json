@@ -1,18 +1,14 @@
 {
   "name": "we-plugin-widget",
   "description": "We.js we-plugin-widget plugin",
-  "version": "1.0.1",
+  "version": "1.1.0",
   "main": "plugin.js",
   "scripts": {
     "test": "NODE_ENV=test LOG_LV=info ./node_modules/.bin/mocha test/bootstrap.js test/**/*.test.js",
     "coverage": "NODE_ENV=test LOG_LV=info ./node_modules/.bin/istanbul cover node_modules/.bin/_mocha -- -u exports -R spec test/bootstrap.js test/**/*.test.js"
   },
   "homepage": "https://github.com/wejs/we-plugin-widget",
-  "author": {
-    "name": "Alberto Souza",
-    "email": "contato@albertosouza.net",
-    "url": "albertosouza.net"
-  },
+  "author": "Alberto Souza <contato@albertosouza.net>",
   "files": [
     "plugin.js",
     "install.js",
@@ -20,7 +16,6 @@
     "server",
     "files/public"
   ],
-  "dependencies": {},
   "devDependencies": {
     "express-mysql-session": "^1.0.0",
     "fs-extra": "^0.18.2",
@@ -40,5 +35,14 @@
     "we-theme-site-wejs": "wejs/we-theme-site-wejs"
   },
   "repository": "wejs/we-plugin-widget",
-  "license": "MIT"
+  "license": "MIT",
+  "keywords": [
+    "wejs-plugin"
+  ],
+  "wejs": {
+    "dependencies": {
+      "we-plugin-user": true,
+      "we-plugin-view": true
+    }
+  }
 }
