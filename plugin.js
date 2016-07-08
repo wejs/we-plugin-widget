@@ -169,6 +169,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
         we.log.verbose('widget.viewMiddleware:', widget.id, widget.type);
         widget.viewMiddleware(req, res, nextW);
       }, done);
+      return null;
     }).catch(done);
   });
 
