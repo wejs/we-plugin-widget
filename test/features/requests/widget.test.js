@@ -84,6 +84,7 @@ describe('widgetFeature', function() {
         request(http)
         .post('/login')
         .set('we-widget-action', 'findOne')
+        .set('Accept', 'application/json')
         .send({
           widget: JSON.stringify({ id: record.id })
         })

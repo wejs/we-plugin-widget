@@ -156,12 +156,13 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     }
 
     // preload all widgets for this response
-    we.db.models.widget.findAll({
+    return we.db.models.widget.findAll({
       where: where,
       order: [
         ['weight', 'ASC'], ['createdAt', 'DESC']
       ],
-    }).then(function afterFindAllWidgets(widgets) {
+    })
+    .then(function afterFindAllWidgets(widgets) {
       we.utils.async.each(widgets, function (widget, nextW) {
         // set widget
         res.locals.regions[widget.regionName].widgets.push(widget);
@@ -170,7 +171,8 @@ module.exports = function loadPlugin(projectPath, Plugin) {
         widget.viewMiddleware(req, res, nextW);
       }, done);
       return null;
-    }).catch(done);
+    })
+    .catch(done);
   });
 
   plugin.hooks.on('we:before:load:plugin:features', function(we, done) {

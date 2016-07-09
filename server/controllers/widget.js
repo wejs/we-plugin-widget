@@ -47,7 +47,7 @@ module.exports = {
         });
       }).catch(function onError(err) {
         res.locals.model = 'widget';
-        res.queryError(err);
+        return res.queryError(err);
       });
     });
   },
@@ -173,7 +173,9 @@ module.exports = {
       }
 
       res.ok();
-    }).catch(res.queryError);
+      return null;
+    })
+    .catch(res.queryError);
   },
 
   /**
