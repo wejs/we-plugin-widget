@@ -45,7 +45,9 @@ module.exports = {
             return res.created();
           }
         });
-      }).catch(function onError(err) {
+        return record
+      })
+      .catch(function onError(err) {
         res.locals.model = 'widget';
         return res.queryError(err);
       });
@@ -83,9 +85,12 @@ module.exports = {
             id: w.id
           }),
           fields: ['weight']
-        }).then(function afterUpdate() {
+        })
+        .then(function afterUpdate() {
           next();
-        }).catch(next);
+          return null
+        })
+        .catch(next);
 
         weights++;
       }, function afterUpdateAllWigets(err) {
@@ -115,14 +120,17 @@ module.exports = {
     we.db.models.widget.findAll({
       where: where,
       order: [ ['weight', 'ASC'], ['createdAt', 'DESC']]
-    }).then(function (widgets) {
+    })
+    .then(function (widgets) {
       if (req.method == 'POST') {
         res.send({ widget: widgets });
       } else {
         res.locals.data = widgets;
         res.ok();
       }
-    }).catch(res.queryError);
+      return widgets
+    })
+    .catch(res.queryError);
   },
 
   findOne: function findOne(req, res, next) {
@@ -268,7 +276,8 @@ module.exports = {
 
     we.db.models.widget.findOne({
       where: { id: id }
-    }).then(function (record) {
+    })
+    .then(function (record) {
       if (!record) return next();
 
       res.status(200);
@@ -313,7 +322,9 @@ module.exports = {
           res.ok();
         }
       });
-    }).catch(res.queryError);
+      return null
+    })
+    .catch(res.queryError);
   },
 
   /**
@@ -349,7 +360,8 @@ module.exports = {
     // check if the widget exists
     we.db.models.widget.findOne({
       where: where
-    }).then(function (record) {
+    })
+    .then(function (record) {
       if (!record) return res.notFound();
 
       var type = record.type;
@@ -377,8 +389,10 @@ module.exports = {
               return res.ok();
             }
           });
+          return null
         });
       });
+      return null
     });
   },
 
@@ -390,9 +404,12 @@ module.exports = {
 
     res.locals.deleteMsg = res.locals.model+'.delete.confirm.msg';
 
-    record.destroy().then(function afterDestroy() {
+    record.destroy()
+    .then(function afterDestroy() {
       res.locals.deleted = true;
-      return res.deleted();
-    }).catch(res.queryError);
+      res.deleted();
+      return null
+    })
+    .catch(res.queryError);
   }
 };
