@@ -219,7 +219,7 @@
 
       $.ajax({
         headers: { 'we-widget-action': 'getWidgetsToSort' },
-        url: url+'?responseType=modal&skipHTML=true',
+        url: url+'?contentOnly=true&skipHTML=true',
         method: 'POST',
         data: {
           params: JSON.stringify({
