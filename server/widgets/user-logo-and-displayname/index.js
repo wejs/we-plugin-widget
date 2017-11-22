@@ -4,7 +4,7 @@
  * this widget only works in user-* contexts
  */
 module.exports = function (projectPath, Widget) {
-  var widget = new Widget('user-logo-and-displayname', __dirname);
+  const widget = new Widget('user-logo-and-displayname', __dirname);
 
   // custom widget method
   widget.checkIfIsValidContext = function checkIfIsValidContext(context) {
@@ -18,7 +18,7 @@ module.exports = function (projectPath, Widget) {
   widget.isAvaibleForSelection = function isAvaibleForSelection(req) {
     if (!req.header) return false;
 
-    var reqContext = req.header('wejs-context');
+    const reqContext = req.header('wejs-context');
 
     if (widget.checkIfIsValidContext(reqContext)) {
       return true;
@@ -40,7 +40,7 @@ module.exports = function (projectPath, Widget) {
   };
 
   widget.renderVisibilityField = function renderVisibilityField(widget, context, req, res) {
-    var field = '';
+    let field = '';
 
     // visibility field
     field += '<div class="form-group"><div class="row">' +

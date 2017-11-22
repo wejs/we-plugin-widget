@@ -5,7 +5,7 @@
  */
 
 module.exports = function passportStrategiesWidget(projectPath, Widget) {
-  var widget = new Widget('passportStrategies', __dirname);
+  const widget = new Widget('passportStrategies', __dirname);
 
   widget.viewMiddleware = function viewMiddleware(widget, req, res, next) {
     if (!req.we.config.passport) return next();

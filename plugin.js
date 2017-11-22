@@ -3,10 +3,10 @@
  *
  * see http://wejs.org/docs/we/plugin
  */
-var fs = require('fs');
+const fs = require('fs');
 
 module.exports = function loadPlugin(projectPath, Plugin) {
-  var plugin = new Plugin(__dirname);
+  const plugin = new Plugin(__dirname);
 
   plugin.setConfigs({
     permissions: {
@@ -43,8 +43,8 @@ module.exports = function loadPlugin(projectPath, Plugin) {
    * @return {Object}     Query object to use in sequelize.findAll
    */
   plugin.getDefaultWidgetQuery = function getDefaultWidgetQuery(req, res) {
-    var regions = null;
-    var theme = res.getTheme();
+    let regions = null;
+    const theme = res.getTheme();
 
     if (theme) {
       if (!res.locals.layoutName || !theme.layouts[res.locals.layoutName])
@@ -53,7 +53,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       regions = Object.keys(theme.layouts[res.locals.layoutName].regions);
     }
 
-    var path = req.path;
+    let path = req.path;
 
     // remove last slash from internal paths
     if (path.length > 1 && path.substr(-1) == '/') {
@@ -110,19 +110,19 @@ module.exports = function loadPlugin(projectPath, Plugin) {
    * @param  {Function} cb callback
    */
   plugin.loadWidgets = function loadWidgets(data, cb) {
-    var name, file;
-    var we = data.we;
-    var pi = data.plugin;
+    let name, file;
+    const we = data.we;
+    const pi = data.plugin;
 
     var widgetsPath = pi.pluginPath + '/server/widgets';
 
-    fs.readdir(widgetsPath , function (err, list) {
+    fs.readdir(widgetsPath, (err, list)=> {
       if (err) {
         if (err.code === 'ENOENT') return cb();
         return cb(err);
       }
 
-      for (var i = 0; i < list.length; i++) {
+      for (let i = 0; i < list.length; i++) {
         name = list[i];
         file = widgetsPath +'/'+name;
 
@@ -137,19 +137,19 @@ module.exports = function loadPlugin(projectPath, Plugin) {
   }
 
   plugin.hooks.on('request:view:after:resolve:layout', function (data, done) {
-    var theme = data.res.getTheme();
+    const theme = data.res.getTheme();
     if (!theme) return done();
 
-    var req = data.req;
-    var res = data.res;
-    var we = req.we;
+    const req = data.req;
+    const res = data.res;
+    const we = req.we;
 
-    var regions = Object.keys(theme.layouts[res.locals.layoutName].regions);
-    for (var i = 0; i < regions.length; i++) {
+    const regions = Object.keys(theme.layouts[res.locals.layoutName].regions);
+    for (let i = 0; i < regions.length; i++) {
       res.locals.regions[regions[i]] = { widgets: [] };
     }
 
-    var where =  plugin.getDefaultWidgetQuery(req, res);
+    let where = plugin.getDefaultWidgetQuery(req, res);
 
     if (res.locals.action != 'findOne') {
       where.inRecord = { $or: [false , null] };
@@ -163,7 +163,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
       ],
     })
     .then(function afterFindAllWidgets(widgets) {
-      we.utils.async.each(widgets, function (widget, nextW) {
+      we.utils.async.each(widgets, (widget, nextW)=> {
         // set widget
         res.locals.regions[widget.regionName].widgets.push(widget);
         // run view middleware for load widget view data
@@ -175,7 +175,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     .catch(done);
   });
 
-  plugin.hooks.on('we:before:load:plugin:features', function(we, done) {
+  plugin.hooks.on('we:before:load:plugin:features', function (we, done) {
     plugin.Widget = require('./lib/Widget')(we);
     done();
   });

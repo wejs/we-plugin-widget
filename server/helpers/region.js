@@ -7,10 +7,10 @@ module.exports = function(we) {
   return function renderWidgetBlock(name, options) {
     if (!options.data.root.regions || !options.data.root.regions[name]) return '';
 
-    var widgetsHtml = '';
+    let widgetsHtml = '';
+    let widget;
 
-    var widget;
-    for (var i = 0; i < options.data.root.regions[name].widgets.length; i++) {
+    for (let i = 0; i < options.data.root.regions[name].widgets.length; i++) {
       widget = options.data.root.regions[name].widgets[i];
 
       if (!we.plugins['we-plugin-widget'].widgetTypes[widget.type]) {
@@ -18,7 +18,8 @@ module.exports = function(we) {
         continue;
       }
 
-      widgetsHtml += we.plugins['we-plugin-widget'].widgetTypes[widget.type].render({
+      widgetsHtml += we.plugins['we-plugin-widget'].widgetTypes[widget.type]
+      .render({
         widget: widget,
         locals: options.data.root
       },options.data.root.theme);

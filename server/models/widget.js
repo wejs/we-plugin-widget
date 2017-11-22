@@ -6,7 +6,7 @@
  */
 
 module.exports = function Model(we) {
-  var model = {
+  const model = {
     definition: {
       /**
        * creator user id
@@ -50,12 +50,12 @@ module.exports = function Model(we) {
       configuration: {
         type: we.db.Sequelize.TEXT,
         skipSanitizer: true,
-        get: function()  {
+        get()  {
           if (this.getDataValue('configuration'))
             return JSON.parse( this.getDataValue('configuration') );
           return {};
         },
-        set: function(object) {
+        set(object) {
           if (typeof object == 'object') {
             this.setDataValue('configuration', JSON.stringify(object));
           } else {
@@ -67,7 +67,7 @@ module.exports = function Model(we) {
       visibility: {
         type: we.db.Sequelize.VIRTUAL,
         allowNull: true,
-        get: function() {
+        get() {
           if (this.getDataValue('modelName')) {
             if (this.getDataValue('modelId')) {
               return 'in-page';
@@ -92,8 +92,8 @@ module.exports = function Model(we) {
       enableAlias: false,
 
       instanceMethods: {
-        getUrlPath: function getUrlPath() { return null; },
-        viewMiddleware: function viewMiddleware(req, res, next) {
+        getUrlPath() { return null; },
+        viewMiddleware(req, res, next) {
           if (!we.plugins['we-plugin-widget'].widgetTypes[this.type]) {
             we.log.warn('Widget type not found in viewMiddleware: ', this.type);
             return next();

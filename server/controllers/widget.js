@@ -1,9 +1,9 @@
 module.exports = {
-  create: function create(req, res) {
+  create(req, res) {
     res.locals.layout = false;
     if (req.user) req.body.creatorId = req.user.id;
 
-    var type = req.body.type;
+    const type = req.body.type;
 
     // context is fixed based in current context
     req.body.context = res.locals.widgetContext;
@@ -21,19 +21,23 @@ module.exports = {
     }
 
     req.we.plugins['we-plugin-widget'].widgetTypes[type]
-    .beforeSave(req, res, function (err) {
-      if (err) return res.queryError(err);
+    .beforeSave(req, res, (err)=> {
+      if (err) {
+        res.queryError(err);
+        return null;
+      }
 
-      req.we.db.models.widget.create(req.body)
+      req.we.db.models.widget
+      .create(req.body)
       .then(function afterCreateWidget(record) {
-
         res.locals.model = 'widget';
 
         res.locals.template = record.type + '/wiew';
         // run view middleware for load widget view data
-        record.viewMiddleware(req, res, function() {
+        record.viewMiddleware(req, res, ()=> {
 
-          record.dataValues.html = req.we.plugins['we-plugin-widget'].widgetTypes[record.type].render({
+          record.dataValues.html = req.we.plugins['we-plugin-widget'].widgetTypes[record.type]
+          .render({
             locals: res.locals,
             widget: record
           }, res.locals.theme);
@@ -45,11 +49,13 @@ module.exports = {
             return res.created();
           }
         });
-        return record
+
+        return null;
       })
       .catch(function onError(err) {
         res.locals.model = 'widget';
-        return res.queryError(err);
+        res.queryError(err);
+        return null;
       });
     });
   },
@@ -60,12 +66,12 @@ module.exports = {
    * @param  {object}   res  express.js response
    * @param  {Function} next callback
    */
-  sortWidgets: function sortWidgets(req, res) {
-    var we = req.we;
+  sortWidgets(req, res) {
+    const we = req.we;
 
     res.locals.regionName = req.params.regionName;
     // get where to only update records in this context
-    var where = we.plugins['we-plugin-widget']
+    const where = we.plugins['we-plugin-widget']
       .getDefaultWidgetQuery(req, res);
 
     where.regionName = req.params.regionName;
@@ -74,9 +80,9 @@ module.exports = {
       if (!req.body.widgets)
         return res.badRequest('widgets body params is required');
 
-      var weights = 0;
+      let weights = 0;
 
-      we.utils.async.eachSeries(req.body.widgets, function (w, next) {
+      we.utils.async.eachSeries(req.body.widgets, (w, next)=> {
         // start in 1 for sorted widgets
         w.weight = weights;
         // only update weight field
@@ -88,7 +94,7 @@ module.exports = {
         })
         .then(function afterUpdate() {
           next();
-          return null
+          return null;
         })
         .catch(next);
 
@@ -108,42 +114,43 @@ module.exports = {
    * @param  {object}   res  express.js response
    * @param  {Function} next callback
    */
-  sortWidgetsList: function sortWidgetsList(req, res) {
-    var we = req.we;
+  sortWidgetsList(req, res) {
+    const we = req.we;
 
-    var where =  we.plugins['we-plugin-widget'].getDefaultWidgetQuery(req, res);
+    const where =  we.plugins['we-plugin-widget'].getDefaultWidgetQuery(req, res);
     where.regionName = req.params.regionName;
 
     res.locals.model = 'widget';
     res.locals.template = 'widget/sortWidgets';
 
-    we.db.models.widget.findAll({
+    we.db.models.widget
+    .findAll({
       where: where,
       order: [ ['weight', 'ASC'], ['createdAt', 'DESC']]
     })
-    .then(function (widgets) {
+    .then( (widgets)=> {
       if (req.method == 'POST') {
         res.send({ widget: widgets });
       } else {
         res.locals.data = widgets;
         res.ok();
       }
-      return widgets
+      return null;
     })
     .catch(res.queryError);
   },
 
-  findOne: function findOne(req, res, next) {
-    var we = req.we;
+  findOne(req, res, next) {
+    const we = req.we;
 
     res.locals.model = 'widget';
     res.locals.layout = false;
     res.locals.regionName = req.params.regionName;
 
     if (!res.locals.data) return next();
-    var record = res.locals.data;
+    const record = res.locals.data;
 
-    record.viewMiddleware(req, res, function() {
+    record.viewMiddleware(req, res, ()=> {
       res.locals.template = record.type + '/wiew';
       res.status(200);
 
@@ -162,14 +169,14 @@ module.exports = {
     });
   },
 
-  find: function findAll(req, res) {
+  find(req, res) {
 
     req.we.db.models.widget
     .findAndCountAll(res.locals.query)
     .then(function afterFind(result) {
 
       if (result && result.rows) {
-        result.rows.forEach(function (record) {
+        result.rows.forEach( (record)=> {
           record.dataValues.html =  req.we.plugins['we-plugin-widget'].widgetTypes[record.type].render({
             locals: res.locals,
             widget: record
@@ -192,12 +199,12 @@ module.exports = {
    * @param  {Object} req express.js request
    * @param  {Object} res express.js response
    */
-  getSelectWidgetTypes: function getSelectWidgetTypes(req, res) {
-    var we = req.we;
+  getSelectWidgetTypes(req, res) {
+    const we = req.we;
 
     res.locals.widgetTypes = [];
 
-    for (var type in we.plugins['we-plugin-widget'].widgetTypes) {
+    for (let type in we.plugins['we-plugin-widget'].widgetTypes) {
       if (we.plugins['we-plugin-widget'].widgetTypes[type].isAvaibleForSelection(req, res)) {
         res.locals.widgetTypes.push({
           type: type,
@@ -209,24 +216,24 @@ module.exports = {
     return res.send({ widget: res.locals.widgetTypes});
   },
 
-  getCreateForm: function getCreateForm(req, res, next) {
-    var we = req.we;
+  getCreateForm(req, res, next) {
+    const we = req.we;
 
     if (
       !we.plugins['we-plugin-widget'].widgetTypes[req.params.type] ||
       !we.view.themes[req.params.theme]
     ) return next();
 
-    var layoutToUpdate = we.view.themes[req.params.theme].layouts[req.params.layout];
+    const layoutToUpdate = we.view.themes[req.params.theme].layouts[req.params.layout];
     if (!layoutToUpdate) return next();
 
     we.plugins['we-plugin-widget'].widgetTypes[req.params.type]
-    .formMiddleware(req, res, function (err) {
+    .formMiddleware(req, res, (err)=> {
       if (err) return res.serverError(err);
 
       res.locals.title = null;
 
-      var context = false;
+      let context = false;
 
       if(res.locals.widgetContext) {
         context = res.locals.widgetContext;
@@ -234,7 +241,7 @@ module.exports = {
         context = req.query.context;
       }
 
-      var widgetType = we.plugins['we-plugin-widget'].widgetTypes[req.params.type];
+      const widgetType = we.plugins['we-plugin-widget'].widgetTypes[req.params.type];
 
       res.locals.type = req.params.type;
       res.locals.layout = req.params.layout;
@@ -259,37 +266,42 @@ module.exports = {
       if (res.locals.selectedRegion)
         res.locals.controllFields += '<input type="hidden" name="regionName" value="'+res.locals.selectedRegion+'">';
 
-      var html = we.plugins['we-plugin-widget'].widgetTypes[req.params.type].renderForm(res.locals, res.locals.theme);
+      let html = we.plugins['we-plugin-widget'].widgetTypes[req.params.type].renderForm(res.locals, res.locals.theme);
       res.status(200);
-      return res.send(html);
+      res.send(html);
+      return null;
     });
   },
 
   /**
    * Get form to update
    */
-  getForm: function getForm(req, res, next) {
-    var we = req.we;
-    var id = req.params.id;
+  getForm(req, res, next) {
+    const we = req.we;
+    const id = req.params.id;
 
     res.locals.model = 'widget';
 
-    we.db.models.widget.findOne({
+    we.db.models.widget
+    .findOne({
       where: { id: id }
     })
-    .then(function (record) {
-      if (!record) return next();
+    .then( (record)=> {
+      if (!record) {
+        next();
+        return null;
+      }
 
       res.status(200);
 
-      var context = record.context || false;
+      let context = record.context || false;
 
-      var widgetType = we.plugins['we-plugin-widget'].widgetTypes[record.type];
+      const widgetType = we.plugins['we-plugin-widget'].widgetTypes[record.type];
 
-      widgetType.formMiddleware(req, res, function (err) {
+      widgetType.formMiddleware(req, res, (err)=> {
         if (err) return res.serverError(err);
 
-        var widget = record.toJSON();
+        const widget = record.toJSON();
 
         widget.regions = {};
 
@@ -313,7 +325,8 @@ module.exports = {
         if (record.regionName)
           res.locals.controllFields += '<input type="hidden" name="regionName" value="'+record.regionName+'">';
 
-        record.dataValues.html = we.plugins['we-plugin-widget'].widgetTypes[record.type].renderForm(res.locals, res.locals.theme);
+        record.dataValues.html = we.plugins['we-plugin-widget'].widgetTypes[record.type]
+        .renderForm(res.locals, res.locals.theme);
 
         if (req.accepts('html')) {
           res.send(record.dataValues.html);
@@ -322,7 +335,7 @@ module.exports = {
           res.ok();
         }
       });
-      return null
+      return null;
     })
     .catch(res.queryError);
   },
@@ -330,10 +343,9 @@ module.exports = {
   /**
    * Update one widget action
    */
-  edit: function update(req, res) {
-    var we = req.we;
-
-    var id = req.widgetId || res.locals.id;
+  edit(req, res) {
+    const we = req.we;
+    let id = req.widgetId || res.locals.id;
 
     // never update widget context
     delete req.body.context;
@@ -351,26 +363,31 @@ module.exports = {
     res.locals.model = 'widget';
 
     // check if the widget exists
-    we.db.models.widget.findOne({
+    we.db.models.widget
+    .findOne({
       where: { id: id }
     })
-    .then(function (record) {
-      if (!record) return res.notFound();
+    .then( (record)=> {
+      if (!record) {
+        res.notFound();
+        return null;
+      }
 
-      var type = record.type;
-      we.plugins['we-plugin-widget'].widgetTypes[type].beforeSave(req, res, function (err) {
+      const type = record.type;
+      we.plugins['we-plugin-widget'].widgetTypes[type].beforeSave(req, res, (err)=> {
         if (err) return res.queryError(err);
         // update in db
         record.updateAttributes(req.body)
-        .then(function() {
+        .then( ()=> {
 
           res.locals.model = 'widget';
 
           res.locals.template = record.type + '/wiew';
           res.status(200);
           // run view middleware for load widget view data
-          record.viewMiddleware(req, res, function() {
-            record.dataValues.html = we.plugins['we-plugin-widget'].widgetTypes[record.type].render({
+          record.viewMiddleware(req, res, ()=> {
+            record.dataValues.html = we.plugins['we-plugin-widget'].widgetTypes[record.type]
+            .render({
               locals: res.locals,
               widget: record
             }, res.locals.theme);
@@ -382,17 +399,19 @@ module.exports = {
               return res.ok();
             }
           });
-          return null
+
+          return null;
         });
       });
-      return null
+
+      return null;
     });
   },
 
-  delete: function deletePage(req, res) {
+  delete(req, res) {
     req.headers.accept = 'application/json';
 
-    var record = res.locals.data;
+    const record = res.locals.data;
     if (!record) return res.notFound();
 
     res.locals.deleteMsg = res.locals.model+'.delete.confirm.msg';
@@ -401,7 +420,7 @@ module.exports = {
     .then(function afterDestroy() {
       res.locals.deleted = true;
       res.deleted();
-      return null
+      return null;
     })
     .catch(res.queryError);
   }

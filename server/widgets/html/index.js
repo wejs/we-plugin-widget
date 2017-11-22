@@ -1,5 +1,5 @@
 module.exports = function htmlWidget(projectPath, Widget) {
-  var widget = new Widget('html', __dirname);
+  const widget = new Widget('html', __dirname);
 
   widget.beforeSave = function htmlWidgetafterSave(req, res, next) {
     req.body.configuration = {
