@@ -350,16 +350,9 @@ module.exports = {
     res.locals.layout = false;
     res.locals.model = 'widget';
 
-    var where =  we.plugins['we-plugin-widget'].getDefaultWidgetQuery(req, res);
-    where.id = id;
-
-    if (res.locals.action != 'findOne' || res.locals.action != 'edit') {
-      where.inRecord = { $or: [false , null] };
-    }
-
     // check if the widget exists
     we.db.models.widget.findOne({
-      where: where
+      where: { id: id }
     })
     .then(function (record) {
       if (!record) return res.notFound();
