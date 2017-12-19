@@ -1,5 +1,4 @@
 (function (we) {
-
   if (we.config.widgetContext) {
     // add current page headers for ajax requests
     $.ajaxSetup({
@@ -87,12 +86,16 @@
     },
     goToStep1: function goToStep1() {
       var modal = $(we.structure.addWidgetModalFormId);
+      this.resetFormActions(modal);
       modal.find('.steps-body .step1').show();
     },
     goToStep2: function goToStep2() {
       var self = this;
 
       var modal = $(we.structure.addWidgetModalFormId);
+
+      this.resetFormActions(modal);
+
       var regionWidgetsTag = $('#region-'+ this.newWidgetObj.regionName +'-widgets');
 
       this.newWidgetObj.type = $('#AddWidgetFormModal-select-type').val();
@@ -191,6 +194,11 @@
           });
         });
       });
+    },
+    resetFormActions(modal) {
+      modal.find('.steps-body .step2').text('');
+      modal.find('form').off();
+      modal.find('form').off('submit');
     },
     deleteWidget: function deleteWidget(id) {
       if (!id) return console.warn('data-id attribute is required for deleteWidget');
