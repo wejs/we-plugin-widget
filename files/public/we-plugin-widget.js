@@ -51,7 +51,23 @@
           formData.modelId = null;
       }
     },
+
+    formatFormOption: function formatFormOption (item) {
+      if (!item.id) return ' ';
+
+      var tags = '<div><span class="widget-option-name">'+item.text+'-ID:'+item.id+'</span>'
+      tags += '<br>';
+      tags += '<span class="widget-option-desc">'+item.description+'</span>';
+      tags += '</div>';
+
+      var $item = $(tags);
+
+      return $item;
+    },
+
     openAddWidgetForm: function openAddWidgetForm(regionName) {
+      var self = this;
+
       var modal = $(we.structure.addWidgetModalFormId);
       if (!modal) throw new Error('Add widget modal not found!', we.structure.addWidgetModalFormId);
 
@@ -70,10 +86,12 @@
         data: {}
       }).then(function afterGetWidgetTypes(r) {
         $('#AddWidgetFormModal-select-type').select2({
+          templateResult: self.formatFormOption,
           data: r.widget.map(function (w){
             return {
               id : w.type,
-              text: w.label+' ('+w.type+')'
+              text: w.label+' ('+w.type+')',
+              description: w.description
             };
           })
         });

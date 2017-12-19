@@ -208,7 +208,8 @@ module.exports = {
       if (we.plugins['we-plugin-widget'].widgetTypes[type].isAvaibleForSelection(req, res)) {
         res.locals.widgetTypes.push({
           type: type,
-          label: req.__('widget.'+type+'.label')
+          label: req.__('widget.'+type+'.label'),
+          description: req.__('widget.'+type+'.description')
         })
       }
     }
