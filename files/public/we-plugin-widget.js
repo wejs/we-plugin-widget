@@ -52,13 +52,23 @@
       }
     },
 
+    optionsCache: {},
+
     formatFormOption: function formatFormOption (item) {
       if (!item.id) return ' ';
 
-      var tags = '<div><span class="widget-option-name">'+item.text+'-ID:'+item.id+'</span>'
-      tags += '<br>';
-      tags += '<span class="widget-option-desc">'+item.description+'</span>';
-      tags += '</div>';
+      var tags;
+
+      if (item.description) {
+        tags = '<div><span class="widget-option-name">'+item.text+'</span>'
+        tags += '<br>';
+        tags += '<span class="widget-option-desc">'+item.description+'</span>';
+        tags += '</div>';
+
+        we.structure.optionsCache[item.id] = tags;
+      } else {
+        tags = we.structure.optionsCache[item.id];
+      }
 
       var $item = $(tags);
 
