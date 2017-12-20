@@ -54,30 +54,25 @@
 
     optionsCache: {},
 
-    formatFormOption: function formatFormOption (item) {
+    formatFormOption: function(item) {
       if (!item.id) return ' ';
 
       var tags;
 
       if (item.description) {
-        tags = '<div><span class="widget-option-name">'+item.text+'</span>'
+        tags = '<div><span class="widget-option-name">'+item.text+'</span>';
         tags += '<br>';
         tags += '<span class="widget-option-desc">'+item.description+'</span>';
         tags += '</div>';
-
         we.structure.optionsCache[item.id] = tags;
       } else {
         tags = we.structure.optionsCache[item.id];
       }
 
-      var $item = $(tags);
-
-      return $item;
+      return $(tags);
     },
 
-    openAddWidgetForm: function openAddWidgetForm(regionName) {
-      var self = this;
-
+    openAddWidgetForm: function (regionName) {
       var modal = $(we.structure.addWidgetModalFormId);
       if (!modal) throw new Error('Add widget modal not found!', we.structure.addWidgetModalFormId);
 
@@ -96,11 +91,11 @@
         data: {}
       }).then(function afterGetWidgetTypes(r) {
         $('#AddWidgetFormModal-select-type').select2({
-          templateResult: self.formatFormOption,
-          data: r.widget.map(function (w){
+          templateResult: this.formatFormOption,
+          data: r.widget.map(function (w) {
             return {
               id : w.type,
-              text: w.label+' ('+w.type+')',
+              text: (w.label+' ('+w.type+')'),
               description: w.description
             };
           })
@@ -223,7 +218,7 @@
         });
       });
     },
-    resetFormActions(modal) {
+    resetFormActions: function(modal) {
       modal.find('.steps-body .step2').text('');
       modal.find('form').off();
       modal.find('form').off('submit');
