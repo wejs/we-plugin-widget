@@ -12,5 +12,7 @@
 	"widget.in-page": "widget.in-page",
 	"Login": "Login",
 	"Home": "Home",
-	"user.find": "user.find"
+	"user.find": "user.find",
+	"widget.html.description": "widget.html.description",
+	"widget.passport-strategies.description": "widget.passport-strategies.description"
 }

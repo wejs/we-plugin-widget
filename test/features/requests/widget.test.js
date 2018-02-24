@@ -144,7 +144,7 @@ describe('widgetFeature', function() {
                 path: path,
                 id: ids
               },
-              order: 'weight ASC'
+              order: [['weight','ASC']]
             }).then(function (widgets) {
               for (var i = 0; i < widgets.length; i++) {
                 assert.equal(widgets[i].weight, i);
