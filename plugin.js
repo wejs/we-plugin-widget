@@ -7,6 +7,7 @@ const fs = require('fs');
 
 module.exports = function loadPlugin(projectPath, Plugin) {
   const plugin = new Plugin(__dirname);
+  const Op = plugin.we.Op;
 
   plugin.setConfigs({
     permissions: {
@@ -61,39 +62,39 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     }
 
     return {
-      theme: { $or: [ res.locals.theme, null, ''] },
+      theme: { [Op.or]: [ res.locals.theme, null, ''] },
       layout: res.locals.layoutName,
       regionName: regions,
       context: res.locals.widgetContext || null,
       // path
 
-      path: { $or: [ path, null, '' ]},
+      path: { [Op.or]: [ path, null, '' ]},
       // widget visibility conditions
-      $or: [
+      [Op.or]: [
         // current session (model)
         {
-          $and: [
+          [Op.and]: [
             { modelName: res.locals.model || null },
             { modelId: null },
           ]
         },
         // global
         {
-          $and: [
+          [Op.and]: [
             { modelName: null },
             { modelId: null },
           ]
         },
         // current record
         {
-          $and: [
+          [Op.and]: [
             { modelName: res.locals.model || null },
             { modelId: res.locals.id || null },
           ]
         },
         // contents of this sesison
         {
-          $and: [
+          [Op.and]: [
             { modelName: res.locals.model || null },
             { modelId: null },
             { inRecord: true },
@@ -152,7 +153,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     let where = plugin.getDefaultWidgetQuery(req, res);
 
     if (res.locals.action != 'findOne') {
-      where.inRecord = { $or: [false , null] };
+      where.inRecord = { [Op.or]: [false , null] };
     }
 
     // preload all widgets for this response
