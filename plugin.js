@@ -62,7 +62,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
     }
 
     return {
-      theme: { [Op.or]: [ res.locals.theme, null, ''] },
+      theme: { [Op.or]: [ res.locals.theme || null, null, ''] },
       layout: res.locals.layoutName,
       regionName: regions,
       context: res.locals.widgetContext || null,

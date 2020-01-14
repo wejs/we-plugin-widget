@@ -1,0 +1,10 @@
+{
+  "reporter": [
+    "lcov"
+  ],
+  "include": [
+    "lib",
+    "server",
+    "src"
+  ]
+}

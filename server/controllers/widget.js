@@ -85,6 +85,7 @@ module.exports = {
       we.utils.async.eachSeries(req.body.widgets, (w, next)=> {
         // start in 1 for sorted widgets
         w.weight = weights;
+
         // only update weight field
         we.db.models.widget.update(w, {
           where: we.utils._.merge(where, {
@@ -135,7 +136,6 @@ module.exports = {
         res.locals.data = widgets;
         res.ok();
       }
-      return null;
     })
     .catch(res.queryError);
   },
