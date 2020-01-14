@@ -184,7 +184,7 @@ module.exports = function loadPlugin(projectPath, Plugin) {
   plugin.hooks.on('plugin:load:features', plugin.loadWidgets);
 
   // bind update widget middleware
-  plugin.events.on('router:add:acl:middleware', function (data) {
+  plugin.events.on('router:add:acl:middleware:after', function (data) {
     data.middlewares.push(require('./lib/updateWidgetMiddleware'));
   });
 
